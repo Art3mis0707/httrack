@@ -24,27 +24,27 @@ def init_webdriver():
 def scroll_and_capture_full_page(driver, save_path):
     total_height = driver.execute_script("return document.body.scrollHeight")
     viewport_height = driver.execute_script("return window.innerHeight")
-    overlap_correction = 100  # Pixels to overlap between screenshots to prevent content repetition
+    overlap_correction = 100  
     screenshots = []
     
     current_height = 0
     while current_height < total_height:
         driver.execute_script(f"window.scrollTo(0, {current_height})")
-        time.sleep(0.5)  # Adjust timing as necessary
+        time.sleep(0.5) 
         screenshot = driver.get_screenshot_as_png()
         screenshot = Image.open(BytesIO(screenshot))
         screenshots.append(screenshot)
         current_height += viewport_height - overlap_correction
         if current_height + viewport_height > total_height:
-            current_height = total_height - viewport_height  # Adjust to end at the bottom
+            current_height = total_height - viewport_height 
             driver.execute_script(f"window.scrollTo(0, {current_height})")
-            time.sleep(0.5)  # Adjust timing as necessary
+            time.sleep(0.5)  
             screenshot = driver.get_screenshot_as_png()
             screenshot = Image.open(BytesIO(screenshot))
             screenshots.append(screenshot)
             break
 
-    # Stitch screenshots with adjustment for overlap
+
     final_image = stitch_screenshots_with_overlap(screenshots, overlap_correction)
     final_image.save(save_path)
 
